@@ -322,10 +322,22 @@ module ActionView
         end
       end
 
+      # Patch for CVE-2020-8163
+
+      RUBY_RESERVED_KEYWORDS = %w(alias and BEGIN begin break case class def defined? do
+      else elsif END end ensure false for if in module next nil not or redo rescue retry
+      return self super then true undef unless until when while yield)
+
+      DELEGATION_RESERVED_KEYWORDS = Set.new(%w(_ arg args block))
+
+      DELEGATION_RESERVED_METHOD_NAMES = Set.new(
+        RUBY_RESERVED_WORDS + DELEGATION_RESERVED_KEYWORDS
+      ).freeze
+
       def locals_code #:nodoc:
         # Only locals with valid variable names get set directly. Others will
         # still be available in local_assigns.
-        locals = @locals.to_set - Module::DELEGATION_RESERVED_METHOD_NAMES
+        locals = @locals.to_set - DELEGATION_RESERVED_METHOD_NAMES
         locals = locals.grep(/\A(?![A-Z0-9])(?:[[:alnum:]_]|[^\0-\177])+\z/)
         # Double assign to suppress the dreaded 'assigned but unused variable' warning
         locals.each_with_object('') { |key, code| code << "#{key} = #{key} = local_assigns[:#{key}];" }

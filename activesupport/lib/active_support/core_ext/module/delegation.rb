@@ -1,15 +1,4 @@
 class Module
-
-  RUBY_RESERVED_KEYWORDS = %w(alias and BEGIN begin break case class def defined? do
-  else elsif END end ensure false for if in module next nil not or redo rescue retry
-  return self super then true undef unless until when while yield)
-
-  DELEGATION_RESERVED_KEYWORDS = Set.new(%w(_ arg args block))
-
-  DELEGATION_RESERVED_METHOD_NAMES = Set.new(
-    RUBY_RESERVED_WORDS + DELEGATION_RESERVED_KEYWORDS
-  ).freeze
-
   # Provides a delegate class method to easily expose contained objects' methods
   # as your own. Pass one or more methods (specified as symbols or strings)
   # and the name of the target object via the <tt>:to</tt> option (also a symbol
